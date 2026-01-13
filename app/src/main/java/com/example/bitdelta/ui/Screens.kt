@@ -8,8 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.EmojiEvents
-import androidx.compose.material.icons.filled.Info
+import androidx.compose.material.icons.rounded.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.bitdelta.ui.theme.*
@@ -33,7 +31,7 @@ import kotlinx.coroutines.launch
 import java.util.Locale
 
 @Composable
-fun HomeScreen(steps: Int, level: Int, xpProgress: Float, isAvailable: Boolean, currentActivity: String) {
+fun HomeScreen(steps: Int, level: Int, xpProgress: Float, isAvailable: Boolean, currentActivity: String, sessionSteps: Int) {
     val context = LocalContext.current
     val goal by context.dataStore.data.map { it[intPreferencesKey("step_goal")] ?: 10000 }.collectAsState(10000)
 
@@ -45,6 +43,7 @@ fun HomeScreen(steps: Int, level: Int, xpProgress: Float, isAvailable: Boolean, 
         LevelHeader(level, xpProgress)
         Spacer(Modifier.height(16.dp))
         
+        // Статус активности
         GlassCard {
             Row(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp), 
@@ -52,7 +51,7 @@ fun HomeScreen(steps: Int, level: Int, xpProgress: Float, isAvailable: Boolean, 
             ) {
                 Box(Modifier.size(8.dp).background(if(currentActivity != "Покой") Color.Green else Color.Gray, CircleShape))
                 Spacer(Modifier.width(8.dp))
-                Text(currentActivity.uppercase(), color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                Text(currentActivity.uppercase(), color = TextWhite, fontSize = 12.sp, fontWeight = FontWeight.ExtraBold)
             }
         }
 
@@ -62,6 +61,12 @@ fun HomeScreen(steps: Int, level: Int, xpProgress: Float, isAvailable: Boolean, 
         } else {
             SensorWarning()
         }
+        
+        if (currentActivity != "Покой") {
+            Spacer(Modifier.height(16.dp))
+            Text("СЕССИЯ: $sessionSteps", color = SkyBlue, fontWeight = FontWeight.Bold, fontSize = 14.sp)
+        }
+
         Spacer(Modifier.weight(1f))
         GlassCard(Modifier.fillMaxWidth()) {
             Row(
@@ -71,45 +76,18 @@ fun HomeScreen(steps: Int, level: Int, xpProgress: Float, isAvailable: Boolean, 
             ) {
                 StatItem("Дистанция", String.format(Locale.getDefault(), "%.2f км", steps * 0.0007))
                 StatItem("Цель", "${goal / 1000}к")
-                StatItem("Ранг", if (level < 5) "Новичок" else if (level < 15) "Атлет" else "Мастер")
+                StatItem("Ранг", getRank(level))
             }
         }
     }
 }
 
-@Composable
-fun TrainingScreen(currentActivity: String, workoutSteps: Int) {
-    Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text("ТРЕНИРОВКА", color = SkyBlue, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
-        Spacer(Modifier.height(40.dp))
-        
-        GlassCard(Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.padding(24.dp), 
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text("ТЕКУЩИЙ СТАТУС", color = TextWhite.copy(alpha = 0.6f), fontSize = 14.sp)
-                Text(currentActivity, color = SkyBlue, fontSize = 32.sp, fontWeight = FontWeight.Black)
-                Spacer(Modifier.height(16.dp))
-                HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
-                Spacer(Modifier.height(16.dp))
-                Text("ШАГОВ В СЕССИИ", color = TextWhite.copy(alpha = 0.6f), fontSize = 14.sp)
-                Text("$workoutSteps", color = TextWhite, fontSize = 48.sp, fontWeight = FontWeight.Bold)
-            }
-        }
-        
-        Spacer(Modifier.height(24.dp))
-        
-        Text(
-            text = "Приложение автоматически определяет бег или ходьбу и начинает запись сессии.",
-            color = TextWhite.copy(alpha = 0.5f),
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center
-        )
+fun getRank(level: Int): String {
+    return when {
+        level < 5 -> "Новичок"
+        level < 10 -> "Атлет"
+        level < 25 -> "Мастер"
+        else -> "Элита"
     }
 }
 
@@ -117,10 +95,10 @@ fun TrainingScreen(currentActivity: String, workoutSteps: Int) {
 fun AchievementsScreen(totalSteps: Int) {
     val awards = remember(totalSteps) {
         listOf(
-            Award("Первый шаг", "Начать пользоваться bit Delta", totalSteps > 0),
-            Award("Путь начат", "Пройти 5,000 шагов", totalSteps >= 5000),
-            Award("Марафонец", "Пройти 42,000 шагов за все время", totalSteps >= 42000),
-            Award("Энерджайзер", "Достичь 10 уровня", totalSteps >= 50000)
+            Award("Контакт", "Система активна", totalSteps > 0),
+            Award("Разминка", "5,000 шагов", totalSteps >= 5000),
+            Award("Атлет", "Уровень 10 достигнут", totalSteps >= 20000),
+            Award("Легенда", "Пройдено 100,000 шагов", totalSteps >= 100000)
         )
     }
 
@@ -129,7 +107,7 @@ fun AchievementsScreen(totalSteps: Int) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Text("НАГРАДЫ", color = SkyBlue, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        Text("ДОСТИЖЕНИЯ", color = SkyBlue, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
         Spacer(Modifier.height(24.dp))
         
         LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -137,7 +115,7 @@ fun AchievementsScreen(totalSteps: Int) {
                 GlassCard(Modifier.fillMaxWidth()) {
                     Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                         Icon(
-                            imageVector = if (award.isUnlocked) Icons.Default.EmojiEvents else Icons.Default.Info,
+                            imageVector = if (award.isUnlocked) Icons.Rounded.WorkspacePremium else Icons.Rounded.Lock,
                             contentDescription = null,
                             tint = if (award.isUnlocked) Color.Yellow else Color.Gray,
                             modifier = Modifier.size(40.dp)
@@ -176,13 +154,17 @@ fun LevelHeader(level: Int, progress: Float) {
 @Composable
 fun KineticCore(steps: Int) {
     val infiniteTransition = rememberInfiniteTransition(label = "core")
-    val scale by infiniteTransition.animateFloat(
-        initialValue = 1f, targetValue = 1.05f,
-        animationSpec = infiniteRepeatable(tween(2000, easing = FastOutSlowInEasing), RepeatMode.Reverse),
+    val pulseScale by infiniteTransition.animateFloat(
+        initialValue = 1f, 
+        targetValue = 1.05f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000, easing = FastOutSlowInEasing), 
+            repeatMode = RepeatMode.Reverse
+        ),
         label = "pulse"
     )
     
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.scale(scale)) {
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.scale(pulseScale)) {
         Box(modifier = Modifier.size(280.dp).background(Brush.radialGradient(listOf(SkyBlue.copy(alpha = 0.15f), Color.Transparent)), CircleShape))
         Box(
             modifier = Modifier.size(240.dp).clip(CircleShape)
@@ -200,7 +182,7 @@ fun KineticCore(steps: Int) {
             )
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 Text(steps.toString(), fontSize = 56.sp, fontWeight = FontWeight.Black, color = TextWhite)
-                Text("ШАГИ", fontSize = 10.sp, color = SkyBlue, letterSpacing = 3.sp)
+                Text("BIT DELTA", fontSize = 10.sp, color = SkyBlue, letterSpacing = 3.sp)
             }
         }
     }

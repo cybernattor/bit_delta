@@ -23,7 +23,7 @@ import com.example.bitdelta.ui.theme.*
 
 @Composable
 fun BottomNavigationBar(navController: NavHostController) {
-    val items = listOf(Screen.Home, Screen.Training, Screen.Achievements, Screen.Settings)
+    val items = listOf(Screen.Home, Screen.Achievements, Screen.Settings)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -31,7 +31,7 @@ fun BottomNavigationBar(navController: NavHostController) {
         modifier = Modifier
             .navigationBarsPadding()
             .fillMaxWidth()
-            .padding(bottom = 16.dp, start = 16.dp, end = 16.dp)
+            .padding(bottom = 16.dp, start = 24.dp, end = 24.dp)
             .height(70.dp)
             .clip(RoundedCornerShape(24.dp))
             .background(NavyBlue)
@@ -51,12 +51,12 @@ fun BottomNavigationBar(navController: NavHostController) {
                             popUpTo(navController.graph.startDestinationId)
                             launchSingleTop = true
                         }
-                    }.padding(4.dp),
+                    }.padding(8.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
                     Icon(screen.icon, null, tint = color)
-                    Text(screen.label, color = color, fontSize = 9.sp, maxLines = 1, softWrap = false)
+                    Text(screen.label, color = color, fontSize = 10.sp, maxLines = 1, softWrap = false)
                 }
             }
         }
@@ -65,7 +65,7 @@ fun BottomNavigationBar(navController: NavHostController) {
 
 @Composable
 fun NavigationSideBar(navController: NavHostController) {
-    val items = listOf(Screen.Home, Screen.Training, Screen.Achievements, Screen.Settings)
+    val items = listOf(Screen.Home, Screen.Achievements, Screen.Settings)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
@@ -102,8 +102,8 @@ fun NavigationSideBar(navController: NavHostController) {
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    Icon(screen.icon, null, tint = color, modifier = Modifier.size(28.dp))
-                    Text(screen.label, color = color, fontSize = 11.sp, maxLines = 1, softWrap = false)
+                    Icon(screen.icon, null, tint = color, modifier = Modifier.size(32.dp))
+                    Text(screen.label, color = color, fontSize = 12.sp, maxLines = 1, softWrap = false)
                 }
             }
         }
