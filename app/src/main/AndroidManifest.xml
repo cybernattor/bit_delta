@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <uses-feature android:name="android.hardware.sensor.stepcounter" android:required="true" />
+    <uses-feature android:name="android.hardware.sensor.stepdetector" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -14,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BitDelta">
         <activity
-            android:name=".MainActivity"
+            android:name="com.bit.bitdelta.MainActivity"
             android:exported="true"
             android:label="bit Delta"
             android:theme="@style/Theme.BitDelta">

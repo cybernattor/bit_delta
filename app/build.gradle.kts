@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.bitdelta"
+    namespace = "com.bit.bitdelta"
     compileSdk = 36 // Поддержка Android 16 (Baklava)
 
     defaultConfig {
-        applicationId = "com.example.bitdelta"
+        applicationId = "com.bit.bitdelta"
         minSdk = 24
         targetSdk = 36 // Целевая версия Android 16
         versionCode = 1
