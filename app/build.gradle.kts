@@ -6,21 +6,22 @@ plugins {
 
 android {
     namespace = "com.bit.bitdelta"
-    compileSdk = 36 // Поддержка Android 16 (Baklava)
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.bit.bitdelta"
         minSdk = 24
-        targetSdk = 36 // Целевая версия Android 16
-        versionCode = 1
-        versionName = "1.0"
+        targetSdk = 36
+        versionCode = 2
+        versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true // Сжатие включено
+            isShrinkResources = true // Удаление неиспользуемых ресурсов
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"

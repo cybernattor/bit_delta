@@ -1,15 +1,30 @@
+# Built artifacts
+**/build/
+*.apk
+*.aar
+*.ap_
+*.dex
+*.class
+
+# IDE files
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+*.iws
+*.ipr
+.gradle/
 local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Secrets & Keys
+*.jks
+*.keystore
+google-services.json
+
+# Kotlin
+.kotlin/
