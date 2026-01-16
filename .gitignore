@@ -1,5 +1,6 @@
 # Built artifacts
 **/build/
+**/release/
 *.apk
 *.aar
 *.ap_
@@ -26,5 +27,5 @@ Thumbs.db
 *.keystore
 google-services.json
 
-# Kotlin
+# Временная папка Kotlin (не сами .kt файлы)
 .kotlin/
